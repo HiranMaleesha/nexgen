@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nexgen/home_screen.dart';
 import 'package:nexgen/main.dart';
 import 'package:nexgen/signup.dart';
 
@@ -96,12 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
+                     _signIn();
+                    /*Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>  MainScreen(),
                           ),
-                        );
+                        );*/
                   },
                   child: const Text('Login'),
                 ),
@@ -139,5 +141,72 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  void _signIn() async {
+  String email = _email.text;
+  String password = _password.text;
+
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User? user = userCredential.user;
+
+    if (user != null) {
+      // Check each personal collection for the user's UID
+      List<String> collectionNames = ['admin', 'users'];
+      String? uid;
+      String? collectionName; // Declaring collectionName variable outside the loop
+
+      for (String name in collectionNames) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection(name)
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists) {
+          uid = user.uid;
+          collectionName = name; // Assigning the current collection name to collectionName variable
+          break;
+        }
+      }
+
+      if (uid != null && collectionName != null) {
+        // Get user document using found UID
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(uid)
+            .get();
+
+        // Retrieve role from Firestore document
+        String? role = userDoc['role'];
+
+        if (role == 'Admin') {
+          // Navigate to admin dashboard
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MainScreen()),
+          );
+        } else if (role == 'User') {
+          // Navigate to user dashboard
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MainScreen()),
+          );
+        } else {
+          // Handle case where role is not found
+          print('Role not recognized');
+        }
+      } else {
+        // Handle case where user document doesn't exist
+        print('User document not found');
+      }
+    }
+  } catch (e) {
+    print("Error occurred: $e");
+    // Handle error, display error message, etc.
+  }
+}
+
 }
 
