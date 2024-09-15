@@ -29,6 +29,7 @@ class HardwareShopApp extends StatelessWidget {
         cartItems.add(item);
       },
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Hardware Shop',
         theme: ThemeData(
           primarySwatch: Colors.blue,
