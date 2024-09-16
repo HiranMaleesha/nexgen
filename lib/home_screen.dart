@@ -7,6 +7,8 @@ import 'package:nexgen/PlumbingScreen.dart';
 import 'package:nexgen/ToolsScreen.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +17,7 @@ class HomeScreen extends StatelessWidget {
           // Image section
           Container(
             height: MediaQuery.of(context).size.height / 4, // 1/4 of the screen height
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/Black and White Hardware Gift Certificate.png'), // Replace with your image path
                 fit: BoxFit.cover,
@@ -83,7 +85,7 @@ class HomeScreen extends StatelessWidget {
             child: Text(
               category,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white, // Text color
                 fontWeight: FontWeight.bold, // Bold text
                 fontSize: 16.0, // Text size

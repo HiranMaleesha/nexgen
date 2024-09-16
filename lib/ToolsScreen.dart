@@ -4,6 +4,8 @@ import 'package:nexgen/cartprovider.dart'; // Import CartProvider
 import 'cart_screen.dart'; // Import the CartScreen
 
 class ToolScreen extends StatefulWidget {
+  const ToolScreen({super.key});
+
   @override
   _ToolScreenState createState() => _ToolScreenState();
 }
@@ -83,7 +85,7 @@ class _ToolScreenState extends State<ToolScreen> {
       },
       child: Card(
         color: secondaryColor,
-        child: Container(
+        child: SizedBox(
           width: 120.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
