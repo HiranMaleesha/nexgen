@@ -8,12 +8,11 @@ import 'package:nexgen/home_screen.dart';
 import 'package:nexgen/navbar.dart';
 import 'package:nexgen/profile_screen.dart';
 import 'package:nexgen/shop_screen.dart';
-
+import 'package:nexgen/app_theme.dart';
 import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(HardwareShopApp());
 }
@@ -21,7 +20,7 @@ Future<void> main() async {
 class HardwareShopApp extends StatelessWidget {
   final List<CartItem> cartItems = [];
 
-   HardwareShopApp({super.key}); // Initialize the cartItems list
+  HardwareShopApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +32,9 @@ class HardwareShopApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Hardware Shop',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system, // This will use the system theme
         home: const LoginScreen(),
       ),
     );

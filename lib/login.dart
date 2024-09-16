@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _password = TextEditingController();
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _email.dispose();
     _password.dispose();
@@ -24,13 +24,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF4A5859), Color(0xFF2E3838)],
+            colors: isDarkMode
+                ? [Color(0xFF4A5859), Color(0xFF2E3838)]
+                : [Colors.blue.shade100, Colors.blue.shade200],
           ),
         ),
         child: SafeArea(
@@ -40,20 +44,18 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'NEX GEN',
-                  style: TextStyle(
-                    fontSize: 40,
+                Text(
+                  'NEXGEN',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: isDarkMode ? Colors.white : Colors.black87,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'HARDWARE',
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Color(0xFFFFAB40),
                     letterSpacing: 2,
                   ),
@@ -61,11 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 48),
                 TextField(
-                  controller:_email,
+                  controller: _email,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: isDarkMode ? Colors.grey[600] : Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -74,44 +76,34 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller:_password,
+                  controller: _password,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: isDarkMode ? Colors.grey[600] : Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
-                    
                   ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: const Color(0xFFFFAB40),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
-                     _signIn();
-                    /*Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>  MainScreen(),
-                          ),
-                        );*/
-                  },
+                  onPressed: _signIn,
                   child: const Text('Login'),
                 ),
                 const SizedBox(height: 16),
                 TextButton(
-                  child: const Text(
+                  child: Text(
                     'Forgot Password?',
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54),
                   ),
                   onPressed: () {
                     // TODO: Implement forgot password functionality
@@ -120,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white, side: const BorderSide(color: Colors.white),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

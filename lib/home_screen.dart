@@ -11,20 +11,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // Image section
           Container(
-            height: MediaQuery.of(context).size.height / 4, // 1/4 of the screen height
-            decoration: const BoxDecoration(
+            height: MediaQuery.of(context).size.height / 4,
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/Black and White Hardware Gift Certificate.png'), // Replace with your image path
+                image: AssetImage('assets/Black and White Hardware Gift Certificate.png'),
                 fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  isDarkMode ? Colors.black.withOpacity(0.6) : Colors.white.withOpacity(0.6),
+                  BlendMode.dstATop,
+                ),
               ),
             ),
           ),
-          // Buttons section
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -33,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
                 children: <Widget>[
-                  _buildCategoryButton(context, "Gardening Equiment", 'assets/gardening.webp', GardeningScreen()),
+                  _buildCategoryButton(context, "Gardening Equipment", 'assets/gardening.webp', GardeningScreen()),
                   _buildCategoryButton(context, "Tools", 'assets/tools.webp', ToolScreen()),
                   _buildCategoryButton(context, "Fasteners", 'assets/fast.jpg', FastenersScreen()),
                   _buildCategoryButton(context, "Electrical Supplies", 'assets/electric.jpeg', ElectricalScreen()),
@@ -49,46 +53,48 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryButton(BuildContext context, String category, String imagePath, Widget screen) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return ElevatedButton(
       onPressed: () {
-        // Navigate to the respective screen
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => screen),
         );
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.zero, // Remove padding inside the button
+        padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0), // Rounded corners
+          borderRadius: BorderRadius.circular(12.0),
         ),
       ),
       child: Stack(
         children: <Widget>[
-          // Background image
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0), // Match the button's rounded corners
+              borderRadius: BorderRadius.circular(12.0),
               image: DecorationImage(
                 image: AssetImage(imagePath),
                 fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  isDarkMode ? Colors.black.withOpacity(0.6) : Colors.white.withOpacity(0.3),
+                  BlendMode.dstATop,
+                ),
               ),
             ),
           ),
-          // Overlay with text
           Container(
             decoration: BoxDecoration(
-              color: Colors.black45, // Semi-transparent overlay
-              borderRadius: BorderRadius.circular(12.0), // Match the button's rounded corners
+              color: isDarkMode ? Colors.black45 : Colors.black26,
+              borderRadius: BorderRadius.circular(12.0),
             ),
             alignment: Alignment.center,
             child: Text(
               category,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white, // Text color
-                fontWeight: FontWeight.bold, // Bold text
-                fontSize: 16.0, // Text size
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
