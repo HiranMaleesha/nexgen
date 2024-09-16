@@ -19,7 +19,9 @@ Future<void> main() async {
 }
 
 class HardwareShopApp extends StatelessWidget {
-  final List<CartItem> cartItems = []; // Initialize the cartItems list
+  final List<CartItem> cartItems = [];
+
+   HardwareShopApp({super.key}); // Initialize the cartItems list
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class HardwareShopApp extends StatelessWidget {
         cartItems.add(item);
       },
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Hardware Shop',
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -40,6 +43,8 @@ class HardwareShopApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -52,24 +57,24 @@ class _MainScreenState extends State<MainScreen> {
     // Access cartProvider to get the shared cartItems
     final cartProvider = CartProvider.of(context);
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       HomeScreen(),
       ShopScreen(),
       CartScreen(cartItems: cartProvider!.cartItems), // Pass the cart items to CartScreen
       ProfileScreen(),
     ];
 
-    void _onItemTapped(int index) {
+    void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
       });
     }
 
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+        onItemTapped: onItemTapped,
       ),
     );
   }

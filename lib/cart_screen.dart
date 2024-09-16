@@ -4,7 +4,7 @@ import 'cartitem.dart';
 class CartScreen extends StatefulWidget {
   final List<CartItem> cartItems;
 
-  CartScreen({required this.cartItems});
+  const CartScreen({super.key, required this.cartItems});
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -17,11 +17,11 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Cart'),
-        backgroundColor: Color(0xFF5C6E6C),
+        title: const Text('My Cart'),
+        backgroundColor: const Color(0xFF5C6E6C),
       ),
       body: widget.cartItems.isEmpty
-          ? Center(
+          ? const Center(
               child: Text(
                 'Your cart is empty',
                 style: TextStyle(fontSize: 18, color: Color(0xFFD2A96A)),
@@ -45,7 +45,7 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Total: \$${totalPrice.toStringAsFixed(2)}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF5C6E6C),
@@ -59,12 +59,12 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildCartItem(BuildContext context, CartItem item, int index) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: ListTile(
-        contentPadding: EdgeInsets.all(10.0),
+        contentPadding: const EdgeInsets.all(10.0),
         title: Text(
           item.name,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF5C6E6C)),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF5C6E6C)),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +74,7 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 Text('Qty: ${item.quantity}'),
                 IconButton(
-                  icon: Icon(Icons.remove_circle_outline),
+                  icon: const Icon(Icons.remove_circle_outline),
                   onPressed: () {
                     setState(() {
                       if (item.quantity > 1) {
@@ -84,7 +84,7 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.add_circle_outline),
+                  icon: const Icon(Icons.add_circle_outline),
                   onPressed: () {
                     setState(() {
                       item.quantity;  
@@ -100,7 +100,7 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             Text('\$${(item.price * item.quantity).toStringAsFixed(2)}'),
             IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () {
                 setState(() {
                   widget.cartItems.removeAt(index);

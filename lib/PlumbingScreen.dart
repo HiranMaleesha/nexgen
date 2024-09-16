@@ -4,15 +4,17 @@ import 'package:nexgen/cartprovider.dart'; // Import CartProvider
 import 'cart_screen.dart'; // Import the CartScreen
 
 class PlumbingScreen extends StatefulWidget {
+  const PlumbingScreen({super.key});
+
   @override
   _PlumbingScreenState createState() => _PlumbingScreenState();
 }
 
 class _PlumbingScreenState extends State<PlumbingScreen> {
-  final Color primaryColor = Color(0xFFA6B7AA);
-  final Color secondaryColor = Color(0xFF5C6E6C);
-  final Color accentColor = Color(0xFFD2A96A);
-  final Color highlightColor = Color(0xFFD26A5A);
+  final Color primaryColor = const Color(0xFFA6B7AA);
+  final Color secondaryColor = const Color(0xFF5C6E6C);
+  final Color accentColor = const Color(0xFFD2A96A);
+  final Color highlightColor = const Color(0xFFD26A5A);
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +22,11 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plumbing Supplies'),
+        title: const Text('Plumbing Supplies'),
         backgroundColor: primaryColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               Navigator.push(
                 context,
@@ -82,13 +84,13 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
       },
       child: Card(
         color: secondaryColor,
-        child: Container(
+        child: SizedBox(
           width: 120.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(Icons.shopping_bag, size: 50, color: accentColor),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Text(productName, textAlign: TextAlign.center, style: TextStyle(color: primaryColor)),
             ],
           ),
@@ -111,9 +113,9 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
                 productName,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Text('Details about $productName go here.', style: TextStyle(color: primaryColor)),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   // Add the item to the cart using the provider
@@ -134,7 +136,7 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: highlightColor,
                 ),
-                child: Text('Add to Cart', style: TextStyle(color: Colors.white)),
+                child: const Text('Add to Cart', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

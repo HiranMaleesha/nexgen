@@ -5,7 +5,7 @@ class CartProvider extends InheritedWidget {
   final List<CartItem> cartItems;
   final Function(CartItem) addItemToCart;
 
-  CartProvider({
+  const CartProvider({
     Key? key,
     required Widget child,
     required this.cartItems,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ShopScreen extends StatelessWidget {
+  const ShopScreen({super.key});
+
   
 
 
@@ -8,17 +10,17 @@ class ShopScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About Our Shop'),
-        backgroundColor: Color(0xFF5C6E6C), // Primary color for AppBar
+        title: const Text('About Our Shop'),
+        backgroundColor: const Color(0xFF5C6E6C), // Primary color for AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader('Our Mission', Color(0xFFD2A96A)),
-            SizedBox(height: 10),
-            Text(
+            _buildSectionHeader('Our Mission', const Color(0xFFD2A96A)),
+            const SizedBox(height: 10),
+            const Text(
               'To provide the highest quality hardware products at competitive prices, '
               'ensuring customer satisfaction and community support.',
               style: TextStyle(
@@ -26,10 +28,10 @@ class ShopScreen extends StatelessWidget {
                 color: Color(0xFF5C6E6C), // Main text color
               ),
             ),
-            SizedBox(height: 30),
-            _buildSectionHeader('Our Vision', Color(0xFFD39D87)),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 30),
+            _buildSectionHeader('Our Vision', const Color(0xFFD39D87)),
+            const SizedBox(height: 10),
+            const Text(
               'To be the leading hardware supplier, recognized for our customer-centric '
               'approach, innovative solutions, and commitment to excellence.',
               style: TextStyle(
@@ -37,10 +39,10 @@ class ShopScreen extends StatelessWidget {
                 color: Color(0xFF5C6E6C), // Main text color
               ),
             ),
-            SizedBox(height: 30),
-            _buildSectionHeader('Our Values', Color(0xFFA6B7AA)),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 30),
+            _buildSectionHeader('Our Values', const Color(0xFFA6B7AA)),
+            const SizedBox(height: 10),
+            const Text(
               'Integrity, Innovation, Customer Focus, and Sustainability.',
               style: TextStyle(
                 fontSize: 16.0,
@@ -59,7 +61,7 @@ class ShopScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
             color: Color(0xFF5C6E6C), // Header text color
