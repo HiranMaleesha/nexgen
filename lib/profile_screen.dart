@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nexgen/auth_service.dart';
+import 'package:nexgen/edit_profile_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -95,11 +96,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: const TextStyle(fontSize: 16.0, color: Color(0xFFA6B7AA)),
             ),
             const SizedBox(height: 20),
-            _buildProfileButton(
+            _editProfileButton(
                 context, 'Edit Profile', const Color(0xFFD2A96A)),
             _buildProfileButton(context, 'Settings', const Color(0xFFD39D87)),
             _logOutButton(context, 'Logout', const Color(0xFF5C6E6C)),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _editProfileButton(BuildContext context, String title, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color, // Button color
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -110,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
         onPressed: () {
-          // Handle button action here
+          // SettingScreen
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: color, // Button color
