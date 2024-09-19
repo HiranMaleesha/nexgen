@@ -35,7 +35,7 @@ class HardwareShopApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system, // This will use the system theme
-        home: const LoginScreen(),
+        home: LoginScreen(),
       ),
     );
   }
@@ -59,7 +59,9 @@ class _MainScreenState extends State<MainScreen> {
     final List<Widget> pages = [
       HomeScreen(),
       ShopScreen(),
-      CartScreen(cartItems: cartProvider!.cartItems), // Pass the cart items to CartScreen
+      CartScreen(
+          cartItems:
+              cartProvider!.cartItems), // Pass the cart items to CartScreen
       ProfileScreen(),
     ];
 

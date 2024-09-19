@@ -100,7 +100,9 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             Text('\$${(item.price * item.quantity).toStringAsFixed(2)}'),
             IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
+              icon: 
+               const Icon(Icons.delete, 
+              color: Colors.red),
               onPressed: () {
                 setState(() {
                   widget.cartItems.removeAt(index);

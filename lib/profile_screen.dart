@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nexgen/auth_service.dart';
 import 'package:nexgen/edit_profile_page.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -19,11 +19,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProfileImage();
-    _getUserData();
+    _loadProfileData();
   }
 
-  void _loadProfileImage() async {
+  Future<void> _loadProfileData() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       try {
@@ -32,162 +31,208 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .doc(currentUser.uid)
             .get();
         final data = docSnapshot.data();
-        if (data != null && data.containsKey('profileImageUrl')) {
+        if (data != null) {
           setState(() {
             _profileImageUrl = data['profileImageUrl'];
+            _userData = data;
           });
         }
       } catch (e) {
-        print('Error fetching profile image URL: $e');
+        print('Error fetching profile data: $e');
       }
-    }
-  }
-
-  Future<void> _getUserData() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      final String uid = currentUser.uid;
-      DocumentSnapshot userDataSnapshot = await FirebaseFirestore.instance
-          .collection(
-              'users') // Assuming user data is stored in the 'users' collection
-          .doc(uid) // Use user's UID to retrieve their document
-          .get();
-
-      setState(() {
-        _userData = userDataSnapshot.data() as Map<String, dynamic>;
-      });
-    } else {
-      print('Current user is null');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: const Color(0xFF5C6E6C), // Use primary theme color
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  _profileImageUrl != null && _profileImageUrl!.isNotEmpty
+                      ? Image.network(
+                          _profileImageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Theme.of(context).primaryColor,
+                              child: Icon(Icons.person,
+                                  size: 100, color: Colors.white),
+                            );
+                          },
+                        )
+                      : Container(
+                          color: Theme.of(context).primaryColor,
+                          child: Icon(Icons.person,
+                              size: 100, color: Colors.white),
+                        ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          isDarkMode
+                              ? Colors.black.withOpacity(0.7)
+                              : Colors.white.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _userData['Name'] ?? 'Your Name',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(height: 24),
+                  _buildInfoCard(context, isDarkMode),
+                  SizedBox(height: 24),
+                  _buildActionButtons(context, isDarkMode),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, bool isDarkMode) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: isDarkMode ? Colors.grey[800] : Colors.white,
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: const Color(0xFFD2A96A),
-              backgroundImage: _profileImageUrl != null
-                  ? NetworkImage(_profileImageUrl!)
-                  : const AssetImage(
-                          'https://as2.ftcdn.net/v2/jpg/03/59/58/91/1000_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg')
-                      as ImageProvider, // Cast AssetImage to ImageProvider
-            ),
-            const SizedBox(height: 20),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              _userData.containsKey('Name') ? _userData['Name'] : 'Loading..',
-              style: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF5C6E6C)),
+              'Personal Information',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              _userData.containsKey('Email') ? _userData['Email'] : 'Loading..',
-              style: const TextStyle(fontSize: 16.0, color: Color(0xFFA6B7AA)),
-            ),
-            const SizedBox(height: 20),
-            _editProfileButton(
-                context, 'Edit Profile', const Color(0xFFD2A96A)),
-            _buildProfileButton(context, 'Settings', const Color(0xFFD39D87)),
-            _logOutButton(context, 'Logout', const Color(0xFF5C6E6C)),
+            Divider(color: isDarkMode ? Colors.grey[600] : Colors.grey[300]),
+            _buildInfoRow(context, Icons.contact_page, 'Full Name',
+                _userData['Name'] ?? 'N/A'),
+            _buildInfoRow(
+                context, Icons.email, 'Email', _userData['Email'] ?? 'N/A'),
           ],
         ),
       ),
     );
   }
 
-  Widget _editProfileButton(BuildContext context, String title, Color color) {
+  Widget _buildInfoRow(
+      BuildContext context, IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
+      child: Row(
+        children: [
+          Icon(icon, color: Theme.of(context).colorScheme.secondary),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey)),
+                Text(value, style: Theme.of(context).textTheme.titleMedium),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, bool isDarkMode) {
+    return Column(
+      children: [
+        _buildButton(
+          context,
+          'Edit Profile',
+          Icons.edit,
+          () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const EditProfileScreen()),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color, // Button color
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
           ),
+          isDarkMode,
         ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        SizedBox(height: 12),
+        _buildButton(
+          context,
+          'Settings',
+          Icons.settings,
+          () {
+            // Navigate to Settings
+          },
+          isDarkMode,
         ),
-      ),
+        SizedBox(height: 12),
+        _buildButton(
+          context,
+          'Logout',
+          Icons.exit_to_app,
+          () => _handleLogout(context),
+          isDarkMode,
+          isLogout: true,
+        ),
+      ],
     );
   }
 
-  Widget _buildProfileButton(BuildContext context, String title, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          // SettingScreen
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color, // Button color
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _logOutButton(BuildContext context, String title, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          _handleLogout(context);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color, // Button color
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+  Widget _buildButton(BuildContext context, String title, IconData icon,
+      VoidCallback onPressed, bool isDarkMode,
+      {bool isLogout = false}) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(title),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: isLogout
+            ? (isDarkMode ? Colors.white : Colors.red)
+            : (isDarkMode ? Colors.black : Colors.white),
+        backgroundColor: isLogout
+            ? (isDarkMode ? Colors.red : Colors.white)
+            : Theme.of(context).colorScheme.secondary,
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        minimumSize: Size(double.infinity, 50),
+        elevation: 0,
+        side: isLogout && !isDarkMode
+            ? BorderSide(color: Colors.red)
+            : BorderSide.none,
       ),
     );
   }
 
   void _handleLogout(BuildContext context) async {
-    await _authService.signOut(context); // Call the signOut method
+    await _authService.signOut(context);
   }
 }
