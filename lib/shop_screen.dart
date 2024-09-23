@@ -72,8 +72,11 @@ class _ShopScreenState extends State<ShopScreen> {
                         : const Color(0xFF5C6E6C),
                   ),
                   const SizedBox(height: 16),
-                  _buildSectionHeader('Our Location',
-                      isDarkMode ? Colors.blue : const Color(0xFF5C6E6C)),
+                  _buildSectionHeader(
+                      'Our Location',
+                      isDarkMode
+                          ? const Color.fromARGB(255, 163, 95, 50)
+                          : const Color(0xFF5C6E6C)),
                   const SizedBox(height: 8),
                   Container(
                     height: 300,

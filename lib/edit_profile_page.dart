@@ -209,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     hintText:
                         'Enter Name: ${_userData.containsKey('Name') ? _userData['Name'] : 'Unavalilable'}',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: const Color.fromARGB(255, 40, 39, 39),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -223,7 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     hintText:
                         'Enter Email: ${_userData.containsKey('Email') ? _userData['Email'] : 'Unavalilable'}',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: const Color.fromRGBO(39, 38, 38, 1),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
