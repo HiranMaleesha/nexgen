@@ -37,30 +37,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // Function to select image from gallery
   Future<void> _selectImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+    // Show a dialog to let the user choose between camera and gallery
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select Image Source'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.camera),
+              title: Text('Camera'),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text('Gallery'),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
 
-      // Upload the image to Firebase Storage
-      final currentUser = FirebaseAuth.instance.currentUser;
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child('${currentUser!.uid}.jpg');
-      await storageRef.putFile(_imageFile!);
+    if (source != null) {
+      final pickedFile = await picker.pickImage(source: source);
 
-      // Get the download URL of the uploaded image
-      final imageUrl = await storageRef.getDownloadURL();
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
 
-      // Save the download URL in Firestore (You need to implement this part)
-      // Example:
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .update({'profileImageUrl': imageUrl});
+        // Upload the image to Firebase Storage
+        final currentUser = FirebaseAuth.instance.currentUser;
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('profile_images')
+            .child('${currentUser!.uid}.jpg');
+        await storageRef.putFile(_imageFile!);
+
+        // Get the download URL of the uploaded image
+        final imageUrl = await storageRef.getDownloadURL();
+
+        // Save the download URL in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .update({'profileImageUrl': imageUrl});
+      }
     }
   }
 
