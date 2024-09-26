@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nexgen/cartitem.dart';
+import 'package:nexgen/MoreDetailsPage.dart';
+import 'package:nexgen/cart_screen.dart';
 import 'package:nexgen/cartprovider.dart';
-import 'cart_screen.dart'; // Import the CartScreen
+
+import 'models/product_data.dart'; // Import the shared ProductData model
 
 class PaintScreen extends StatefulWidget {
   const PaintScreen({super.key});
@@ -11,11 +14,148 @@ class PaintScreen extends StatefulWidget {
 }
 
 class _PaintScreenState extends State<PaintScreen> {
-  // Define the colors
   final Color primaryColor = const Color(0xFFA6B7AA);
   final Color secondaryColor = const Color(0xFF5C6E6C);
   final Color accentColor = const Color(0xFFD2A96A);
   final Color highlightColor = const Color(0xFFD26A5A);
+
+  late Future<List<ProductData>> _productsFuture;
+  List<ProductData> interiorp = [];
+  List<ProductData> exteriorp = [];
+  List<ProductData> brushes = [];
+  List<ProductData> rollers = [];
+  List<ProductData> trays = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = fetchProductsFromFirestore();
+  }
+
+  double _convertToDouble(dynamic price) {
+    if (price is String) {
+      return double.tryParse(price) ?? 0.0;
+    } else if (price is double) {
+      return price;
+    } else if (price is int) {
+      return price.toDouble();
+    } else {
+      return 0.0;
+    }
+  }
+
+  int _convertToInt(dynamic price) {
+    if (price is String) {
+      return int.tryParse(price) ?? 0;
+    } else if (price is double) {
+      return price.toInt();
+    } else if (price is int) {
+      return price;
+    } else {
+      return 0;
+    }
+  }
+
+  Future<List<ProductData>> fetchProductsFromFirestore() async {
+    List<ProductData> products = [];
+
+    QuerySnapshot<Map<String, dynamic>> interiorpSnapshot =
+        await FirebaseFirestore.instance
+            .collection('hardware')
+            .doc('interiorpaints')
+            .collection('products')
+            .get();
+
+    QuerySnapshot<Map<String, dynamic>> exteriorpSnapshot =
+        await FirebaseFirestore.instance
+            .collection('hardware')
+            .doc('exteriorpaints')
+            .collection('products')
+            .get();
+
+    QuerySnapshot<Map<String, dynamic>> brusheSnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('brushes')
+        .collection('products')
+        .get();
+
+    QuerySnapshot<Map<String, dynamic>> rollerSnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('rollers')
+        .collection('products')
+        .get();
+
+    QuerySnapshot<Map<String, dynamic>> traySnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('trays')
+        .collection('products')
+        .get();
+
+    for (var doc in interiorpSnapshot.docs) {
+      interiorp.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in exteriorpSnapshot.docs) {
+      exteriorp.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in brusheSnapshot.docs) {
+      brushes.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in rollerSnapshot.docs) {
+      rollers.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in traySnapshot.docs) {
+      trays.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    return products;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +164,7 @@ class _PaintScreenState extends State<PaintScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Paint Supplies'),
+        backgroundColor: primaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart),
@@ -31,27 +172,39 @@ class _PaintScreenState extends State<PaintScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CartScreen(cartItems: cartProvider!.cartItems), // Access cart items from provider
+                  builder: (context) => const CartScreen(),
                 ),
               );
             },
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          _buildCategorySection(context, 'Interior Paint', ['Interior Paint 1','Interior Paint 2','Interior Paint 3','Interior Paint 4','Interior Paint 5','Interior Paint 6',]),
-          _buildCategorySection(context, 'Exterior Paint', ['Exterior Paint 1','Exterior Paint 2','Exterior Paint 3','Exterior Paint 4','Exterior Paint 5','Exterior Paint 6',]),
-          _buildCategorySection(context, 'Brushes', ['Brush 1', 'Brush 2', 'Brush 3', 'Brush 4', 'Brush 5', 'Brush 6', ]),
-          _buildCategorySection(context, 'Rollers', ['Roller 1','Roller 2','Roller 3','Roller 4','Roller 5','Roller 6',]),
-          _buildCategorySection(context, 'Paint Trays', ['Paint Tray 1','Paint Tray 2','Paint Tray 3','Paint Tray 4','Paint Tray 5','Paint Tray 6',]),
-        ],
+      body: FutureBuilder<List<ProductData>>(
+        future: _productsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            return const Center(child: Text('Error loading products'));
+          } else {
+            return ListView(
+              children: <Widget>[
+                _buildCategorySection(context, 'Interior Paint', interiorp),
+                _buildCategorySection(context, 'Exterior Paint', exteriorp),
+                _buildCategorySection(context, 'Brushes', brushes),
+                _buildCategorySection(context, 'Rollers', rollers),
+                _buildCategorySection(context, 'Paint Trays', trays),
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget _buildCategorySection(BuildContext context, String title, List<String> products) {
+  Widget _buildCategorySection(
+      BuildContext context, String title, List<ProductData> products) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -59,7 +212,8 @@ class _PaintScreenState extends State<PaintScreen> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
           ),
           SizedBox(
             height: 150.0,
@@ -76,12 +230,15 @@ class _PaintScreenState extends State<PaintScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, String productName) {
-    final cartProvider = CartProvider.of(context);
-
+  Widget _buildProductCard(BuildContext context, ProductData product) {
     return GestureDetector(
       onTap: () {
-        _showProductDetails(context, productName, cartProvider!);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MoreDetailsPage(productData: product),
+          ),
+        );
       },
       child: Card(
         color: secondaryColor,
@@ -90,59 +247,15 @@ class _PaintScreenState extends State<PaintScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.shopping_bag, size: 50, color: accentColor),
+              Image.network(product.imageUrl, height: 50),
               const SizedBox(height: 8.0),
-              Text(productName, textAlign: TextAlign.center, style: TextStyle(color: primaryColor)),
+              Text(product.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: primaryColor)),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void _showProductDetails(BuildContext context, String productName, CartProvider cartProvider) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: secondaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                productName,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
-              ),
-              const SizedBox(height: 16.0),
-              Text('Details about $productName go here.', style: TextStyle(color: primaryColor)),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Add the item to the cart using the provider
-                  cartProvider.addItemToCart(
-                    CartItem(
-                      name: productName,
-                      details: 'Details about $productName',
-                      quantity: 1,
-                      price: 10.0, // Set a fixed price or retrieve the actual price
-                    ),
-                  );
-
-                  Navigator.pop(context); // Close the dialog after adding to cart
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$productName added to cart')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: highlightColor,
-                ),
-                child: const Text('Add to Cart', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
