@@ -62,14 +62,14 @@ class _PaintScreenState extends State<PaintScreen> {
     QuerySnapshot<Map<String, dynamic>> interiorpSnapshot =
         await FirebaseFirestore.instance
             .collection('hardware')
-            .doc('interiorpaints')
+            .doc('interiorp')
             .collection('products')
             .get();
 
     QuerySnapshot<Map<String, dynamic>> exteriorpSnapshot =
         await FirebaseFirestore.instance
             .collection('hardware')
-            .doc('exteriorpaints')
+            .doc('exteriorp')
             .collection('products')
             .get();
 
