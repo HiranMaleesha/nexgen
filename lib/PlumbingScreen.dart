@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nexgen/cartitem.dart';
-import 'package:nexgen/cartprovider.dart'; // Import CartProvider
-import 'cart_screen.dart'; // Import the CartScreen
+import 'package:nexgen/MoreDetailsPage.dart';
+import 'package:nexgen/cart_screen.dart';
+import 'package:nexgen/cartprovider.dart';
+
+import 'models/product_data.dart'; // Import the shared ProductData model
 
 class PlumbingScreen extends StatefulWidget {
   const PlumbingScreen({super.key});
@@ -15,6 +18,124 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
   final Color secondaryColor = const Color(0xFF5C6E6C);
   final Color accentColor = const Color(0xFFD2A96A);
   final Color highlightColor = const Color(0xFFD26A5A);
+
+  late Future<List<ProductData>> _productsFuture;
+  List<ProductData> pipes = [];
+  List<ProductData> fittings = [];
+  List<ProductData> faucets = [];
+  List<ProductData> valves = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = fetchProductsFromFirestore();
+  }
+
+  double _convertToDouble(dynamic price) {
+    if (price is String) {
+      return double.tryParse(price) ?? 0.0;
+    } else if (price is double) {
+      return price;
+    } else if (price is int) {
+      return price.toDouble();
+    } else {
+      return 0.0;
+    }
+  }
+
+  int _convertToInt(dynamic price) {
+    if (price is String) {
+      return int.tryParse(price) ?? 0;
+    } else if (price is double) {
+      return price.toInt();
+    } else if (price is int) {
+      return price;
+    } else {
+      return 0;
+    }
+  }
+
+  Future<List<ProductData>> fetchProductsFromFirestore() async {
+    List<ProductData> products = [];
+
+    QuerySnapshot<Map<String, dynamic>> pipeSnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('pipes')
+        .collection('products')
+        .get();
+
+    QuerySnapshot<Map<String, dynamic>> fittingSnapshot =
+        await FirebaseFirestore.instance
+            .collection('hardware')
+            .doc('fittings')
+            .collection('products')
+            .get();
+
+    QuerySnapshot<Map<String, dynamic>> faucetSnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('faucets')
+        .collection('products')
+        .get();
+
+    QuerySnapshot<Map<String, dynamic>> valveSnapshot = await FirebaseFirestore
+        .instance
+        .collection('hardware')
+        .doc('valves')
+        .collection('products')
+        .get();
+
+    for (var doc in pipeSnapshot.docs) {
+      pipes.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in fittingSnapshot.docs) {
+      fittings.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in faucetSnapshot.docs) {
+      faucets.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    for (var doc in valveSnapshot.docs) {
+      valves.add(ProductData(
+        name: doc['name'],
+        details: doc['details'],
+        price: _convertToDouble(doc['price']),
+        imageUrl: doc['imageUrl'],
+        quantity: _convertToInt(doc['quantity']),
+        category: doc['category'],
+        docId: doc.id,
+      ));
+    }
+
+    return products;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +152,38 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CartScreen(cartItems: cartProvider!.cartItems),
+                  builder: (context) => const CartScreen(),
                 ),
               );
             },
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          _buildCategorySection(context, 'Pipes', ['Product 1', 'Product 2', 'Product 3']),
-          _buildCategorySection(context, 'Fittings', ['Product 4', 'Product 5', 'Product 6']),
-          _buildCategorySection(context, 'Faucets', ['Product 7', 'Product 8', 'Product 9']),
-          _buildCategorySection(context, 'Valves', ['Product 10', 'Product 11', 'Product 12']),
-        ],
+      body: FutureBuilder<List<ProductData>>(
+        future: _productsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            return const Center(child: Text('Error loading products'));
+          } else {
+            return ListView(
+              children: <Widget>[
+                _buildCategorySection(context, 'Pipes', pipes),
+                _buildCategorySection(context, 'Fittings', fittings),
+                _buildCategorySection(context, 'Faucets', faucets),
+                _buildCategorySection(context, 'Valves', valves),
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget _buildCategorySection(BuildContext context, String title, List<String> products) {
+  Widget _buildCategorySection(
+      BuildContext context, String title, List<ProductData> products) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -58,7 +191,8 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
           ),
           SizedBox(
             height: 150.0,
@@ -75,12 +209,15 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, String productName) {
-    final cartProvider = CartProvider.of(context);
-
+  Widget _buildProductCard(BuildContext context, ProductData product) {
     return GestureDetector(
       onTap: () {
-        _showProductDetails(context, productName, cartProvider!);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MoreDetailsPage(productData: product),
+          ),
+        );
       },
       child: Card(
         color: secondaryColor,
@@ -89,59 +226,15 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.shopping_bag, size: 50, color: accentColor),
+              Image.network(product.imageUrl, height: 50),
               const SizedBox(height: 8.0),
-              Text(productName, textAlign: TextAlign.center, style: TextStyle(color: primaryColor)),
+              Text(product.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: primaryColor)),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void _showProductDetails(BuildContext context, String productName, CartProvider cartProvider) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: secondaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                productName,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
-              ),
-              const SizedBox(height: 16.0),
-              Text('Details about $productName go here.', style: TextStyle(color: primaryColor)),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Add the item to the cart using the provider
-                  cartProvider.addItemToCart(
-                    CartItem(
-                      name: productName,
-                      details: 'Details about $productName',
-                      quantity: 1,
-                      price: 10.0, // Set a fixed price or retrieve the actual price
-                    ),
-                  );
-
-                  Navigator.pop(context); // Close the dialog after adding to cart
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$productName added to cart')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: highlightColor,
-                ),
-                child: const Text('Add to Cart', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
