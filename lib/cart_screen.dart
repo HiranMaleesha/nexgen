@@ -167,7 +167,7 @@ class _CartScreenState extends State<CartScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Total: \$${totalPrice.toStringAsFixed(2)}',
+                    'Total: Rs ${totalPrice.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -199,16 +199,20 @@ class _CartScreenState extends State<CartScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(item['details']),
-            Text('Quantity: ${item['quantity']}'),
+            Text(
+              'Quantity & Price: ${item['quantity']} | Rs ${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}',
+              style: const TextStyle(color: Color.fromARGB(255, 227, 132, 125)),
+            ),
           ],
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-                '\$${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}'),
+            //Text('Rs ${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}'),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
+              iconSize:
+                  40.0, // Set the size of the icon (you can adjust the value)
               onPressed: () {
                 // Parse quantity to int
                 int cartItemQuantity = int.parse(item['quantity'].toString());
