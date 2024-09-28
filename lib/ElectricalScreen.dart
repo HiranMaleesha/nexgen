@@ -190,10 +190,15 @@ class _ElectricalScreenState extends State<ElectricalScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
+          Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: primaryColor,
+              ),
+            ),
           ),
           SizedBox(
             height: 150.0,
@@ -223,7 +228,8 @@ class _ElectricalScreenState extends State<ElectricalScreen> {
       child: Card(
         color: secondaryColor,
         child: SizedBox(
-          width: 120.0,
+          width: MediaQuery.of(context).size.width - 25,
+          //width: 120.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
