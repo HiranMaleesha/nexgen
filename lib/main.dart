@@ -57,14 +57,11 @@ class _MainScreenState extends State<MainScreen> {
     final cartProvider = CartProvider.of(context);
 
     final List<Widget> pages = [
-      HomeScreen(),
-      ShopScreen(),
-      CartScreen(
-          cartItems:
-              cartProvider!.cartItems), // Pass the cart items to CartScreen
-      ProfileScreen(),
+      const HomeScreen(),
+      const ShopScreen(),
+      const CartScreen(), // Pass the cart items to CartScreen
+      const ProfileScreen(),
     ];
-
     void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;

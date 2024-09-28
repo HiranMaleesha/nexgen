@@ -4,6 +4,7 @@ import 'package:nexgen/MoreDetailsPage.dart';
 import 'package:nexgen/cart_screen.dart';
 import 'package:nexgen/cartprovider.dart';
 
+
 import 'models/product_data.dart'; // Import the shared ProductData model
 
 class ElectricalScreen extends StatefulWidget {
