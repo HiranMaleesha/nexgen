@@ -23,7 +23,7 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
   List<ProductData> pipes = [];
   List<ProductData> fittings = [];
   List<ProductData> faucets = [];
-  List<ProductData> valves = [];
+  List<ProductData> vales = [];
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
     QuerySnapshot<Map<String, dynamic>> valveSnapshot = await FirebaseFirestore
         .instance
         .collection('hardware')
-        .doc('valves')
+        .doc('vales')
         .collection('products')
         .get();
 
@@ -123,7 +123,7 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
     }
 
     for (var doc in valveSnapshot.docs) {
-      valves.add(ProductData(
+      vales.add(ProductData(
         name: doc['name'],
         details: doc['details'],
         price: _convertToDouble(doc['price']),
@@ -171,7 +171,7 @@ class _PlumbingScreenState extends State<PlumbingScreen> {
                _buildCategorySection(context, 'Pipes', pipes),
                 _buildCategorySection(context, 'Fittings', fittings),
                 _buildCategorySection(context, 'Faucets', faucets),
-                _buildCategorySection(context, 'Valves', valves),
+                _buildCategorySection(context, 'Valves', vales),
               ],
             );
           }
