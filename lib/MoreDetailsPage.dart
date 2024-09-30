@@ -38,9 +38,9 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
         category = 'gloves';
       } else if (widget.productData.category == "hammers") {
         category = 'hammers';
-      } else if (widget.productData.category == "screrdrivers") {
+      } else if (widget.productData.category == "screwdrivers") {
         category = 'screwdrivers';
-      } else if (widget.productData.category == "wranches") {
+      } else if (widget.productData.category == "wrenches") {
         category = 'wrenches';
       } else if (widget.productData.category == "pliers") {
         category = 'pliers';
@@ -68,8 +68,8 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
         category = 'fittings';
       } else if (widget.productData.category == "faucets") {
         category = 'faucets';
-      } else if (widget.productData.category == "valves") {
-        category = 'valves';
+      } else if (widget.productData.category == "vales") {
+        category = 'vales';
       } else if (widget.productData.category == "interiorp") {
         category = 'interiorp';
       } else if (widget.productData.category == "exteriorp") {
