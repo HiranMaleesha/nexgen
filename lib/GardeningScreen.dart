@@ -139,8 +139,6 @@ class _GardeningScreenState extends State<GardeningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = CartProvider.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gardening Equipment'),
@@ -189,16 +187,21 @@ class _GardeningScreenState extends State<GardeningScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            color: Colors.black, // Dark background for the section name
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // Light text color for contrast
+                ),
               ),
             ),
           ),
+          const SizedBox(height: 10),
           SizedBox(
             height: 150.0,
             child: ListView.builder(
@@ -225,18 +228,58 @@ class _GardeningScreenState extends State<GardeningScreen> {
         );
       },
       child: Card(
-        color: secondaryColor,
+        color: Colors.white, // Light color for the card
+        elevation: 3,
+        margin: const EdgeInsets.all(8.0),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width - 25,
-          //width: 120.0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          width: MediaQuery.of(context).size.width - 35, // Adjust card width
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.network(product.imageUrl, height: 50),
-              const SizedBox(height: 8.0),
-              Text(product.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: primaryColor)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.network(
+                  product.imageUrl,
+                  height: 80,
+                  width: 80, // Fixed image size
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        product.name,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        product.details,
+                        style: const TextStyle(fontSize: 14),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Rs ${product.price}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[700], // Color for price
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
