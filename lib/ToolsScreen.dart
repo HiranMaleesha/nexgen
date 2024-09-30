@@ -21,8 +21,8 @@ class _ToolScreenState extends State<ToolScreen> {
 
   late Future<List<ProductData>> _productsFuture;
   List<ProductData> hammers = [];
-  List<ProductData> screrdrivers = [];
-  List<ProductData> wranches = [];
+  List<ProductData> screwdrivers = [];
+  List<ProductData> wrenches = [];
   List<ProductData> pliers = [];
   List<ProductData> drills = [];
 
@@ -69,14 +69,14 @@ class _ToolScreenState extends State<ToolScreen> {
     QuerySnapshot<Map<String, dynamic>> screrdriverSnapshot =
         await FirebaseFirestore.instance
             .collection('hardware')
-            .doc('screrdrivers')
+            .doc('screwdrivers')
             .collection('products')
             .get();
 
     QuerySnapshot<Map<String, dynamic>> wrancheSnapshot =
         await FirebaseFirestore.instance
             .collection('hardware')
-            .doc('wranches')
+            .doc('wrenches')
             .collection('products')
             .get();
 
@@ -107,7 +107,7 @@ class _ToolScreenState extends State<ToolScreen> {
     }
 
     for (var doc in screrdriverSnapshot.docs) {
-      screrdrivers.add(ProductData(
+      screwdrivers.add(ProductData(
         name: doc['name'],
         details: doc['details'],
         price: _convertToDouble(doc['price']),
@@ -119,7 +119,7 @@ class _ToolScreenState extends State<ToolScreen> {
     }
 
     for (var doc in wrancheSnapshot.docs) {
-      wranches.add(ProductData(
+      wrenches.add(ProductData(
         name: doc['name'],
         details: doc['details'],
         price: _convertToDouble(doc['price']),
@@ -189,8 +189,8 @@ class _ToolScreenState extends State<ToolScreen> {
             return ListView(
               children: <Widget>[
                 _buildCategorySection(context, 'Hammers', hammers),
-                _buildCategorySection(context, 'Screrdrivers', screrdrivers),
-                _buildCategorySection(context, 'Wranches', wranches),
+                _buildCategorySection(context, 'Screrdrivers', screwdrivers),
+                _buildCategorySection(context, 'Wranches', wrenches),
                 _buildCategorySection(context, 'Pliers', pliers),
                 _buildCategorySection(context, 'Drills', drills),
               ],
