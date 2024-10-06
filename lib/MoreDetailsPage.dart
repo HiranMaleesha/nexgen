@@ -171,7 +171,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Gardening Equipment Details'),
+        title: const Text('More Details'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,7 +190,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
               style: const TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Color.fromARGB(255, 155, 155, 155),
               ),
               textAlign: TextAlign.center,
             ),
@@ -199,7 +199,8 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Price: \$${widget.productData.price.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 18.0, color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 18.0, color: Color.fromARGB(255, 149, 148, 148)),
               textAlign: TextAlign.center,
             ),
           ),
@@ -207,7 +208,8 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Quantity Available: ${widget.productData.quantity}',
-              style: const TextStyle(fontSize: 18.0, color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 18.0, color: Color.fromARGB(255, 130, 128, 128)),
               textAlign: TextAlign.center,
             ),
           ),

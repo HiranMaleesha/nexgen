@@ -199,31 +199,19 @@ class _CartScreenState extends State<CartScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(item['details']),
-<<<<<<< HEAD
-            Text('Quantity: ${item['quantity']}'),
-=======
             Text(
               'Quantity & Price: ${item['quantity']} | Rs ${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}',
               style: const TextStyle(color: Color.fromARGB(255, 227, 132, 125)),
             ),
->>>>>>> ffcd8bfb6f48c3863e060b3de532072f0dac6e23
           ],
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-<<<<<<< HEAD
             Text(
                 '\$${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}'),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-=======
-            //Text('Rs ${(_convertToDouble(item['price']) * int.parse(item['quantity'])).toStringAsFixed(2)}'),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              iconSize:
-                  40.0, // Set the size of the icon (you can adjust the value)
->>>>>>> ffcd8bfb6f48c3863e060b3de532072f0dac6e23
               onPressed: () {
                 // Parse quantity to int
                 int cartItemQuantity = int.parse(item['quantity'].toString());
