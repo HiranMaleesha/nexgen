@@ -171,7 +171,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('More Details'),
+        title: const Text('More Details '),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -207,7 +207,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Quantity Available: ${widget.productData.quantity}',
+              'Quantity Available : ${widget.productData.quantity}',
               style: const TextStyle(
                   fontSize: 18.0, color: Color.fromARGB(255, 130, 128, 128)),
               textAlign: TextAlign.center,
@@ -227,7 +227,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
               controller: _quantityController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Enter Quantity to Reserve',
+                labelText: 'Enter Quantity to Reserve ',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -239,7 +239,7 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                 decreaseQuantity();
                 _addUserNotification();
               },
-              child: const Text('Reserve'),
+              child: const Text('Reserve '),
             ),
           ),
         ],
